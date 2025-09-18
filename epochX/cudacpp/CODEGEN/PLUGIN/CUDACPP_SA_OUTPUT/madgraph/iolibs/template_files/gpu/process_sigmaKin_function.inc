@@ -14,7 +14,8 @@
 #ifdef MGONGPUCPP_GPUIMPL
     allMEs[ievt] = 0;
 #ifdef MGONGPU_SUPPORTS_MULTICHANNEL
-    allNumerators[ievt] = 0;
+    for( int i = 0; i < processConfig::ndiagrams; ++i )
+      allNumerators[ievt * processConfig::ndiagrams + i] = 0;
     allDenominators[ievt] = 0;
 #endif
 #else
@@ -319,9 +320,9 @@
     // https://www.uzh.ch/cmsssl/physik/dam/jcr:2e24b7b1-f4d7-4160-817e-47b13dbf1d7c/Handout_4_2016-UZH.pdf]
 #ifdef MGONGPUCPP_GPUIMPL
     allMEs[ievt] /= helcolDenominators[0];
-#ifdef MGONGPU_SUPPORTS_MULTICHANNEL
+/*#ifdef MGONGPU_SUPPORTS_MULTICHANNEL
     if( allChannelIds != nullptr ) allMEs[ievt] *= allNumerators[ievt] / allDenominators[ievt]; // fix segfault #892 (not 'channelIds[0] != 0')
-#endif
+#endif*/
 #else
     for( int ipagV = 0; ipagV < npagV; ++ipagV )
     {
@@ -329,7 +330,7 @@
       fptype* MEs = E_ACCESS::ieventAccessRecord( allMEs, ievt0 );
       fptype_sv& MEs_sv = E_ACCESS::kernelAccess( MEs );
       MEs_sv /= helcolDenominators[0];
-#ifdef MGONGPU_SUPPORTS_MULTICHANNEL
+/*#ifdef MGONGPU_SUPPORTS_MULTICHANNEL
       if( allChannelIds != nullptr ) // fix segfault #892 (not 'channelIds[0] != 0')
       {
         const unsigned int channelId = getChannelId( allChannelIds, ievt0, false );
@@ -339,7 +340,7 @@
         fptype_sv& denominators_sv = DEN_ACCESS::kernelAccess( denominators );
         MEs_sv *= numerators_sv[channelId - 1] / denominators_sv;
       }
-#endif
+#endif*/
       //for( int ieppV = 0; ieppV < neppV; ieppV++ )
       //{
       //  const unsigned int ievt = ipagV * neppV + ieppV;

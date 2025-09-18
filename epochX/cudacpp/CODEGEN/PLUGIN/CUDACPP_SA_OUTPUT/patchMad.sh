@@ -55,33 +55,33 @@ if [ "${patchlevel}" == "2" ]; then
   \rm -f bin/internal/*.orig
   cd - > /dev/null
 fi
-for p1dir in ${dir}/SubProcesses/P*; do
-  cd $p1dir
-  #ln -sf ../fbridge_common.inc . # new file
-  #cp -pr ${scrdir}/MG5aMC_patches/${dir_patches}/counters.cc . # new file
-  #cp -pr ${scrdir}/MG5aMC_patches/${dir_patches}/ompnumthreads.cc . # new file
-  if [ "${patchlevel}" == "2" ]; then
-    echo "DEBUG: cd ${PWD}; patch -p6 -i ${scrdir}/MG5aMC_patches/${dir_patches}/patch.P1"
-    if ! patch -p6 -i ${scrdir}/MG5aMC_patches/${dir_patches}/patch.P1; then status=1; fi
-  fi
-  \rm -f *.orig
-  cd - > /dev/null
-done
+#for p1dir in ${dir}/SubProcesses/P*; do
+#  cd $p1dir
+#  #ln -sf ../fbridge_common.inc . # new file
+#  #cp -pr ${scrdir}/MG5aMC_patches/${dir_patches}/counters.cc . # new file
+#  #cp -pr ${scrdir}/MG5aMC_patches/${dir_patches}/ompnumthreads.cc . # new file
+#  if [ "${patchlevel}" == "2" ]; then
+#    echo "DEBUG: cd ${PWD}; patch -p6 -i ${scrdir}/MG5aMC_patches/${dir_patches}/patch.P1"
+#    if ! patch -p6 -i ${scrdir}/MG5aMC_patches/${dir_patches}/patch.P1; then status=1; fi
+#  fi
+#  \rm -f *.orig
+#  cd - > /dev/null
+#done
 
 # Patch the default Fortran code to provide the integration with the cudacpp plugin
 # (2) Process-dependent patches
-cd ${dir}/Source/MODEL > /dev/null
-gcs=$(cat coupl_write.inc | awk '{if($1=="WRITE(*,2)") print $NF}') # different printouts for scalar/vector couplings #456
-for gc in $gcs; do
-  if grep -q "$gc(VECSIZE_MEMMAX)" coupl.inc; then
-    ###echo "DEBUG: Coupling $gc is a vector"
-    cat coupl_write.inc | awk -vgc=$gc '{if($1=="WRITE(*,2)" && $NF==gc) print $0"(1)"; else print $0}' > coupl_write.inc.new
-    \mv coupl_write.inc.new coupl_write.inc
-  ###else
-  ###  echo "DEBUG: Coupling $gc is a scalar"
-  fi
-done
-cd - > /dev/null
+#cd ${dir}/Source/MODEL > /dev/null
+#gcs=$(cat coupl_write.inc | awk '{if($1=="WRITE(*,2)") print $NF}') # different printouts for scalar/vector couplings #456
+#for gc in $gcs; do
+#  if grep -q "$gc(VECSIZE_MEMMAX)" coupl.inc; then
+#    ###echo "DEBUG: Coupling $gc is a vector"
+#    cat coupl_write.inc | awk -vgc=$gc '{if($1=="WRITE(*,2)" && $NF==gc) print $0"(1)"; else print $0}' > coupl_write.inc.new
+#    \mv coupl_write.inc.new coupl_write.inc
+#  ###else
+#  ###  echo "DEBUG: Coupling $gc is a scalar"
+#  fi
+#done
+#cd - > /dev/null
 
 # Patch the default cudacpp code to fix a bug in coloramps
 # ** NEW AUG 2023: DISABLING THE COLORAMPS PATCH FIXES THE LHE COLOR MISMATCH IN GG_TTGG (#655 and #713) **
