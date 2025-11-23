@@ -513,8 +513,8 @@ namespace mg5amcCpu
             fptype* allMEs,                     // output: allMEs[nevt], |M|^2 final_avg_over_helicities
 #ifdef MGONGPU_SUPPORTS_MULTICHANNEL
             const unsigned int* allChannelIds,        // input: multichannel channelIds[nevt] (1 to #diagrams); nullptr to disable single-diagram enhancement (fix #899/#911)
-            const fptype* allrndchannel,        // input: random numbers[nevt] for channel sampling
-            unsigned int* allChannelIdsOut,     // output: multichannel channelIds[nevt] (1 to #diagrams)
+            const fptype* allrnddiagram,        // input: random numbers[nevt] for diagram sampling
+            unsigned int* allDiagramIdsOut,     // output: multichannel channelIds[nevt] (1 to #diagrams)
             fptype* allNumerators,              // output: multichannel numerators[nevt], running_sum_over_helicities
             fptype* allDenominators,            // output: multichannel denominators[nevt], running_sum_over_helicities
             bool mulChannelWeight,              // if true, multiply channel weight to ME output
